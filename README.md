@@ -1,114 +1,459 @@
 # WorkBoard — Job Board Portal
 
-A full-stack job board application built with React, Node/Express, MongoDB, JWT, and Bcrypt.
+A full-stack job board application built with **React**, **Node/Express**, **MongoDB**, **JWT**, and **Bcrypt**.
 
-## Features
+**Scope**: 6–8 hours • **Version**: v1.0 • **Status**: Complete ✅
 
-- **Authentication** — Register/login as candidate or company; JWT-based sessions
-- **Role-based access** — Protected routes enforced on both frontend and backend
-- **Job Feed** — Browse all jobs with live filtering by keyword, location, type, and salary range
-- **Job Details** — Full job detail page with inline application form for candidates
-- **Company Dashboard** — Post and delete jobs, view all applicants per job
-- **Apply Flow** — Candidates submit name, email, and resume URL; duplicate prevention built in
+---
 
-## Tech Stack
+## 🎯 Objective
 
-| Layer    | Tech                          |
-|----------|-------------------------------|
-| Frontend | React 18, Vite, React Router v6, Axios |
-| Backend  | Node.js, Express 4, Mongoose  |
-| Database | MongoDB                       |
-| Auth     | JWT (jsonwebtoken), Bcrypt    |
+Build a working mini job board with authentication where:
+- **Candidates** browse and apply for jobs
+- **Companies** post jobs and view applications
+- Focus on clean code, working API, and connected UI with role-based access control
 
-## Project Structure
+---
+
+## ✨ Features
+
+### 🔐 Authentication
+- Register with name, email, password, and role (candidate/company)
+- Login returns JWT token stored in localStorage
+- Token-based session management
+- Protected routes enforced by role on both frontend and backend
+
+### 💼 Job Management (Company)
+- Post jobs with title, description, salary, location, and job type
+- View all posted jobs on company dashboard
+- Delete own jobs
+- View all applicants for each job with details (name, email, resume link, application date)
+
+### 🔍 Job Browsing & Filtering (Public)
+- List all jobs with advanced filtering options
+- Search by keyword (job title, description)
+- Filter by location, job type, and salary range
+- Detailed job page with full job information
+
+### 📝 Application System (Candidate)
+- Apply for jobs with name, email, and resume URL
+- One application per candidate per job (duplicate prevention)
+- Success/error notifications on submission
+- Track applied jobs
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Frontend** | React, Vite, React Router v6, Axios | 18+ |
+| **Backend** | Node.js, Express.js, Mongoose | 4.x |
+| **Database** | MongoDB | 5.x+ |
+| **Auth** | JWT (jsonwebtoken), Bcrypt | — |
+| **Other** | dotenv, CORS | — |
+
+---
+
+## 📁 Project Structure
 
 ```
-job-board-portal/
-├── backend/          # Express API
-│   ├── config/       # MongoDB connection
-│   ├── middleware/   # JWT auth & role guards
-│   ├── models/       # User, Job, Application schemas
-│   ├── routes/       # Auth & Job routes
-│   └── server.js     # Entry point
-└── frontend/         # React app (Vite)
-    └── src/
-        ├── context/  # AuthContext (global state)
-        ├── components/ # Navbar, ProtectedRoute
-        └── pages/    # Login, Register, JobFeed, JobDetail, CompanyDash, Applicants
+Job_portal/
+├── Backend/                    # Express API Server
+│   ├── config/
+│   │   └── db.js              # MongoDB connection configuration
+│   ├── middleware/
+│   │   ├── auth.js            # JWT verification & role guards
+│   │   └── fileUpload.js      # Resume upload middleware
+│   ├── models/
+│   │   ├── User.js            # User schema (name, email, password, role)
+│   │   ├── Job.js             # Job schema (title, desc, salary, location, type, postedBy)
+│   │   └── Application.js     # Application schema (jobId, name, email, resumeLink, appliedAt)
+│   ├── routes/
+│   │   ├── authRoutes.js      # POST /auth/register, /auth/login
+│   │   └── jobRoutes.js       # GET/POST /jobs, /jobs/:id, /jobs/:id/apply, /jobs/:id/applications
+│   ├── uploads/               # Resume storage directory
+│   ├── server.js              # Express entry point
+│   └── package.json           # Backend dependencies
+│
+└── Frontend/                   # React + Vite App
+    ├── src/
+    │   ├── context/
+    │   │   └── AuthContext.jsx        # Global auth state (user, token, login/logout)
+    │   ├── components/
+    │   │   ├── Navbar.jsx            # Navigation with user menu
+    │   │   ├── ProtectedRoute.jsx    # Role-based route protection
+    │   │   └── icons/
+    │   │       └── SvgIcons.jsx      # Reusable SVG icons
+    │   ├── pages/
+    │   │   ├── Login.jsx             # /login — User login form
+    │   │   ├── Register.jsx          # /register — User registration form
+    │   │   ├── JobFeed.jsx           # /jobs — List jobs with filters
+    │   │   ├── JobDetail.jsx         # /jobs/:id — Job details + apply form
+    │   │   ├── CompanyDash.jsx       # /dashboard — Company's posted jobs
+    │   │   └── Applicants.jsx        # /dashboard/jobs/:id/applicants — View applicants
+    │   ├── App.jsx                   # Main app routing & layout
+    │   ├── main.jsx                  # React entry point
+    │   ├── index.css                 # Global styles
+    │   ├── vite.config.js            # Vite configuration with API proxy
+    │   └── package.json              # Frontend dependencies
+    └── index.html                    # HTML template
 ```
 
-## Setup & Run
+---
+
+## 📊 Data Models
+
+### User
+```javascript
+{
+  _id: ObjectId,
+  name: String (required),
+  email: String (required, unique),
+  password: String (hashed with bcrypt, required),
+  role: String (enum: "candidate" | "company", required),
+  createdAt: Date (default: now)
+}
+```
+
+### Job
+```javascript
+{
+  _id: ObjectId,
+  title: String (required),
+  description: String (required),
+  salary: Number (required),
+  location: String (required),
+  type: String (enum: "full-time" | "part-time" | "internship", required),
+  postedBy: ObjectId (ref: User, required),
+  createdAt: Date (default: now),
+  updatedAt: Date
+}
+```
+
+### Application
+```javascript
+{
+  _id: ObjectId,
+  jobId: ObjectId (ref: Job, required),
+  name: String (required),
+  email: String (required),
+  resumeLink: String (required - URL to uploaded resume),
+  appliedAt: Date (default: now)
+  // Unique constraint: [jobId, email] to prevent duplicate applications
+}
+```
+
+---
+
+## 🔌 API Reference
+
+### Authentication Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| **POST** | `/auth/register` | — | Register new user (name, email, password, role: "candidate"\|"company") |
+| **POST** | `/auth/login` | — | Login → returns JWT token + user data |
+
+### Job Endpoints
+
+| Method | Endpoint | Auth | Role | Description |
+|--------|----------|------|------|-------------|
+| **GET** | `/jobs` | — | — | List all jobs (supports filters: search, location, type, minSalary, maxSalary) |
+| **GET** | `/jobs/:id` | — | — | Get single job details |
+| **POST** | `/jobs` | ✅ | Company | Create new job (title, description, salary, location, type) |
+| **DELETE** | `/jobs/:id` | ✅ | Company | Delete own job |
+
+### Application Endpoints
+
+| Method | Endpoint | Auth | Role | Description |
+|--------|----------|------|------|-------------|
+| **POST** | `/jobs/:id/apply` | ✅ | Candidate | Submit application (name, email, resumeLink) |
+| **GET** | `/jobs/:id/applications` | ✅ | Company | View all applicants for own job |
+
+### Query Parameters (GET /jobs)
+- `search` — Filter by job title or description keyword (case-insensitive)
+- `location` — Filter by location (exact match)
+- `type` — Filter by job type (full-time, part-time, internship)
+- `minSalary` — Filter jobs with salary >= minSalary
+- `maxSalary` — Filter jobs with salary <= maxSalary
+
+### Response Examples
+
+**POST /auth/login** (Success)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "user": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "candidate"
+  }
+}
+```
+
+**GET /jobs?location=NYC&type=full-time** (Success)
+```json
+[
+  {
+    "_id": "507f1f77bcf86cd799439012",
+    "title": "Senior React Developer",
+    "description": "Looking for experienced React developer...",
+    "salary": 120000,
+    "location": "NYC",
+    "type": "full-time",
+    "postedBy": "507f1f77bcf86cd799439010",
+    "createdAt": "2024-05-10T14:30:00Z"
+  }
+]
+```
+
+**POST /jobs/:id/apply** (Success)
+```json
+{
+  "message": "Application submitted successfully",
+  "application": {
+    "_id": "507f1f77bcf86cd799439013",
+    "jobId": "507f1f77bcf86cd799439012",
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "resumeLink": "https://example.com/resume.pdf",
+    "appliedAt": "2024-05-15T10:20:00Z"
+  }
+}
+```
+
+---
+
+## 📄 Pages & Routes
+
+### Public Routes
+| Route | Component | Purpose |
+|-------|-----------|---------|
+| `/login` | Login.jsx | User login form |
+| `/register` | Register.jsx | User registration form (choose role) |
+| `/jobs` | JobFeed.jsx | Browse all jobs with filters |
+| `/jobs/:id` | JobDetail.jsx | View job details + apply form |
+
+### Protected Routes (Candidate)
+| Route | Component | Purpose |
+|-------|-----------|---------|
+| `/dashboard` | CompanyDash.jsx | Redirects to /jobs (candidates see job feed) |
+
+### Protected Routes (Company)
+| Route | Component | Purpose |
+|-------|-----------|---------|
+| `/dashboard` | CompanyDash.jsx | Company dashboard: list posted jobs, create new job |
+| `/dashboard/jobs/:id/applicants` | Applicants.jsx | View all applicants for a specific job |
+
+---
+
+## 🚀 Setup & Run
 
 ### Prerequisites
-- Node.js 18+
-- MongoDB running locally on port 27017 (or a MongoDB Atlas URI)
+- **Node.js** 18+ (or higher)
+- **MongoDB** running locally on `mongodb://localhost:27017` OR a MongoDB Atlas connection URI
+- **npm** or **yarn** package manager
 
-### 1. Clone & install backend
+### Step 1: Clone & Setup Backend
 
 ```bash
-cd job-board-portal/backend
+cd Backend
 npm install
 ```
 
-### 2. Configure environment
+### Step 2: Configure Environment Variables
 
-Edit `backend/.env`:
+Create a `.env` file in the `Backend/` directory:
 
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/jobboard
-JWT_SECRET=change_this_to_a_strong_random_secret
+JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
+NODE_ENV=development
 ```
 
-For MongoDB Atlas, replace `MONGO_URI` with your connection string.
+**For MongoDB Atlas (cloud):**
+```env
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/jobboard?retryWrites=true&w=majority
+```
 
-### 3. Start the backend
+### Step 3: Start Backend Server
 
 ```bash
-npm run dev      # with nodemon (hot reload)
+npm run dev      # Development with nodemon (hot reload)
 # or
-npm start        # production
+npm start        # Production mode
 ```
 
-Server runs at `http://localhost:5000`
+✅ Backend server runs at **http://localhost:5000**
 
-### 4. Install & start frontend
+### Step 4: Setup & Run Frontend
+
+In a new terminal:
 
 ```bash
-cd ../frontend
+cd Frontend
 npm install
 npm run dev
 ```
 
-App runs at `http://localhost:5173`
+✅ Frontend app runs at **http://localhost:5173**
 
-> The Vite dev server proxies `/auth` and `/jobs` requests to the backend automatically.
+> **Note:** The Vite dev server is configured to proxy `/auth` and `/jobs` requests to `http://localhost:5000` (see `vite.config.js`)
 
-## API Reference
+### Step 5: Verify Setup
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/auth/register` | — | Register (name, email, password, role) |
-| POST | `/auth/login` | — | Login → returns JWT |
-| GET | `/jobs` | — | List jobs (query: search, location, type, minSalary, maxSalary) |
-| GET | `/jobs/:id` | — | Get single job |
-| POST | `/jobs` | Company | Create job |
-| DELETE | `/jobs/:id` | Company | Delete own job |
-| POST | `/jobs/:id/apply` | Candidate | Submit application |
-| GET | `/jobs/:id/applications` | Company | View applicants (own job only) |
+1. Open http://localhost:5173 in your browser
+2. You should see the login/register page
+3. Check browser console for any errors
+4. Check terminal output for backend logs
 
-## Testing Flow
+---
 
-1. Register a **company** account → you'll land on the dashboard
-2. Post a couple of jobs from the dashboard
-3. Open a new browser/incognito → register a **candidate** account
-4. Browse the job feed, apply filters, open a job, submit an application
-5. Back in the company account → dashboard → "View Applicants"
+## 🧪 Testing & Usage Flow
 
-## Evaluation Checklist
+### Complete End-to-End Test
 
-- [x] Auth works end-to-end (register, login, token storage)
-- [x] Routes protected by role (frontend redirect + backend 403)
-- [x] Filter returns correct jobs (location, type, salary range, keyword)
-- [x] Application saves to DB with duplicate prevention
-- [x] Clean, readable code with consistent structure
+1. **Register Company Account**
+   - Go to `/register` → Select "Company" role
+   - Create account with email and password
+   - You'll be redirected to `/dashboard`
+
+2. **Post Jobs (Company)**
+   - Click "Post New Job" button
+   - Fill in: title, description, salary, location, type
+   - Submit → Job appears in your dashboard
+
+3. **Register Candidate Account**
+   - Open a new browser tab/incognito window (to stay logged out)
+   - Go to `/register` → Select "Candidate" role
+   - Create account with different email
+
+4. **Browse & Apply (Candidate)**
+   - Go to `/jobs` → See all posted jobs
+   - Use filters (location, type, salary) to narrow down
+   - Click on a job → View details
+   - Click "Apply" → Submit name, email, resume URL
+   - See success notification
+
+5. **Review Applicants (Company)**
+   - Switch back to company account tab
+   - Go to `/dashboard` → Click on a job
+   - See all applicants: name, email, resume link, application date
+
+---
+
+## ✅ Evaluation Checklist
+
+- [x] **Auth works end-to-end** — Register, login, JWT token storage and retrieval
+- [x] **Routes protected by role** — Frontend redirects + backend 403 authorization checks
+- [x] **Filters return correct jobs** — Search, location, type, and salary range filtering works
+- [x] **Applications save to DB** — Form submission creates record with duplicate prevention
+- [x] **Clean, readable code** — Consistent structure, proper separation of concerns, commented logic
+
+---
+
+## 🔑 Key Implementation Details
+
+### Authentication Flow
+1. User submits registration/login form
+2. Backend validates credentials, hashes password with bcrypt (salt rounds: 10)
+3. JWT token is generated and returned
+4. Frontend stores token in localStorage
+5. All subsequent requests include token in `Authorization: Bearer <token>` header
+6. Backend middleware verifies token and checks role
+
+### Role-Based Access Control
+- **Candidate**: Can view all jobs, filter, apply, view own applications
+- **Company**: Can post/delete jobs, view applicants for their jobs
+- Frontend: ProtectedRoute component redirects unauthorized users to login
+- Backend: Middleware returns 403 Forbidden for unauthorized roles
+
+### Duplicate Application Prevention
+- Database has unique compound index on `[jobId, email]`
+- Application insert fails if candidate already applied to same job
+- Frontend shows appropriate error message
+
+### Job Filtering & Search
+- **Search**: Matches job title and description (case-insensitive, partial match)
+- **Location**: Exact match filter
+- **Type**: Exact match filter
+- **Salary**: Range filter using minSalary and maxSalary
+- Multiple filters can be combined in one request
+
+---
+
+## 📦 Dependencies
+
+### Backend (`Backend/package.json`)
+```json
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "dotenv": "^16.0.3",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
+```
+
+### Frontend (`Frontend/package.json`)
+```json
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.10.0",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^3.1.0",
+    "vite": "^4.3.2"
+  }
+}
+```
+
+---
+
+## 📞 Support & Troubleshooting
+
+### MongoDB Connection Issues
+- Ensure MongoDB is running: `mongod` (or use MongoDB Compass)
+- Check `MONGO_URI` in `.env` file
+- Verify MongoDB port (default: 27017)
+
+### JWT Token Issues
+- Clear localStorage and log in again
+- Check JWT_SECRET is set in `.env`
+- Verify token is being sent in Authorization header
+
+### CORS Errors
+- Ensure backend CORS is configured to accept requests from http://localhost:5173
+- Check Express CORS middleware in `server.js`
+
+### Port Already in Use
+- Backend: Change PORT in `.env` (default: 5000)
+- Frontend: Vite will auto-assign next available port if 5173 is in use
+
+---
+
+## 📝 License
+
+This project is part of an internship task. Built with ❤️ as a learning exercise.
+
+---
+
+## 👥 Project Info
+
+- **Full-stack development** following clean code principles
+- **Intern Task v1.0**
+- **Created**: May 2024
+- **Stack**: React + Node/Express + MongoDB + JWT + Bcrypt
