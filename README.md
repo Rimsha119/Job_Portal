@@ -6,7 +6,7 @@ A full-stack job board application built with **React**, **Node/Express**, **Mon
 
 ---
 
-## 🎯 Objective
+##  Objective
 
 Build a working mini job board with authentication where:
 - **Candidates** browse and apply for jobs
@@ -15,27 +15,27 @@ Build a working mini job board with authentication where:
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔐 Authentication
+### Authentication
 - Register with name, email, password, and role (candidate/company)
 - Login returns JWT token stored in localStorage
 - Token-based session management
 - Protected routes enforced by role on both frontend and backend
 
-### 💼 Job Management (Company)
+###  Job Management (Company)
 - Post jobs with title, description, salary, location, and job type
 - View all posted jobs on company dashboard
 - Delete own jobs
 - View all applicants for each job with details (name, email, resume link, application date)
 
-### 🔍 Job Browsing & Filtering (Public)
+###  Job Browsing & Filtering (Public)
 - List all jobs with advanced filtering options
 - Search by keyword (job title, description)
 - Filter by location, job type, and salary range
 - Detailed job page with full job information
 
-### 📝 Application System (Candidate)
+###  Application System (Candidate)
 - Apply for jobs with name, email, and resume URL
 - One application per candidate per job (duplicate prevention)
 - Success/error notifications on submission
@@ -43,7 +43,7 @@ Build a working mini job board with authentication where:
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
@@ -55,7 +55,7 @@ Build a working mini job board with authentication where:
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Job_portal/
@@ -102,7 +102,7 @@ Job_portal/
 
 ---
 
-## 📊 Data Models
+##  Data Models
 
 ### User
 ```javascript
@@ -146,7 +146,7 @@ Job_portal/
 
 ---
 
-## 🔌 API Reference
+##  API Reference
 
 ### Authentication Endpoints
 
@@ -226,7 +226,7 @@ Job_portal/
 
 ---
 
-## 📄 Pages & Routes
+##  Pages & Routes
 
 ### Public Routes
 | Route | Component | Purpose |
@@ -249,7 +249,7 @@ Job_portal/
 
 ---
 
-## 🚀 Setup & Run
+##  Setup & Run
 
 ### Prerequisites
 - **Node.js** 18+ (or higher)
@@ -287,7 +287,7 @@ npm run dev      # Development with nodemon (hot reload)
 npm start        # Production mode
 ```
 
-✅ Backend server runs at **http://localhost:5000**
+ Backend server runs at **http://localhost:5000**
 
 ### Step 4: Setup & Run Frontend
 
@@ -299,7 +299,7 @@ npm install
 npm run dev
 ```
 
-✅ Frontend app runs at **http://localhost:5173**
+ Frontend app runs at **http://localhost:5173**
 
 > **Note:** The Vite dev server is configured to proxy `/auth` and `/jobs` requests to `http://localhost:5000` (see `vite.config.js`)
 
@@ -312,7 +312,7 @@ npm run dev
 
 ---
 
-## 🧪 Testing & Usage Flow
+##  Testing & Usage Flow
 
 ### Complete End-to-End Test
 
@@ -345,7 +345,7 @@ npm run dev
 
 ---
 
-## ✅ Evaluation Checklist
+##  Evaluation Checklist
 
 - [x] **Auth works end-to-end** — Register, login, JWT token storage and retrieval
 - [x] **Routes protected by role** — Frontend redirects + backend 403 authorization checks
@@ -355,105 +355,30 @@ npm run dev
 
 ---
 
-## 🔑 Key Implementation Details
-
-### Authentication Flow
-1. User submits registration/login form
-2. Backend validates credentials, hashes password with bcrypt (salt rounds: 10)
-3. JWT token is generated and returned
-4. Frontend stores token in localStorage
-5. All subsequent requests include token in `Authorization: Bearer <token>` header
-6. Backend middleware verifies token and checks role
-
-### Role-Based Access Control
-- **Candidate**: Can view all jobs, filter, apply, view own applications
-- **Company**: Can post/delete jobs, view applicants for their jobs
-- Frontend: ProtectedRoute component redirects unauthorized users to login
-- Backend: Middleware returns 403 Forbidden for unauthorized roles
-
-### Duplicate Application Prevention
-- Database has unique compound index on `[jobId, email]`
-- Application insert fails if candidate already applied to same job
-- Frontend shows appropriate error message
-
-### Job Filtering & Search
-- **Search**: Matches job title and description (case-insensitive, partial match)
-- **Location**: Exact match filter
-- **Type**: Exact match filter
-- **Salary**: Range filter using minSalary and maxSalary
-- Multiple filters can be combined in one request
-
----
-
-## 📦 Dependencies
-
-### Backend (`Backend/package.json`)
-```json
-{
-  "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.0.0",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0",
-    "dotenv": "^16.0.3",
-    "cors": "^2.8.5",
-    "multer": "^1.4.5-lts.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  }
-}
-```
-
-### Frontend (`Frontend/package.json`)
-```json
-{
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.10.0",
-    "axios": "^1.4.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^3.1.0",
-    "vite": "^4.3.2"
-  }
-}
-```
-
----
-
-## 📞 Support & Troubleshooting
-
-### MongoDB Connection Issues
-- Ensure MongoDB is running: `mongod` (or use MongoDB Compass)
-- Check `MONGO_URI` in `.env` file
-- Verify MongoDB port (default: 27017)
-
-### JWT Token Issues
-- Clear localStorage and log in again
-- Check JWT_SECRET is set in `.env`
-- Verify token is being sent in Authorization header
-
-### CORS Errors
-- Ensure backend CORS is configured to accept requests from http://localhost:5173
-- Check Express CORS middleware in `server.js`
-
-### Port Already in Use
-- Backend: Change PORT in `.env` (default: 5000)
-- Frontend: Vite will auto-assign next available port if 5173 is in use
-
----
-
-## 📝 License
+##  License
 
 This project is part of an internship task. Built with ❤️ as a learning exercise.
 
 ---
 
-## 👥 Project Info
+##  Project Info
 
 - **Full-stack development** following clean code principles
 - **Intern Task v1.0**
 - **Created**: May 2024
 - **Stack**: React + Node/Express + MongoDB + JWT + Bcrypt
+
+## Project Screenshots:
+<img width="1920" height="1331" alt="image" src="https://github.com/user-attachments/assets/961b9cad-2321-454e-b214-9505d1587139" />
+<img width="1920" height="1178" alt="image" src="https://github.com/user-attachments/assets/0111af23-b458-4f0d-bf42-0a46ed2b83f6" />
+<img width="1920" height="1873" alt="image" src="https://github.com/user-attachments/assets/bc5cbb7f-089b-4238-a116-6509262197b8" />
+<img width="1905" height="850" alt="image" src="https://github.com/user-attachments/assets/828bee6f-4074-4773-ab35-71907abe7391" />
+<img width="1804" height="964" alt="image" src="https://github.com/user-attachments/assets/bdbf9a46-5c4d-4d26-9f9d-04863cb71df9" />
+<img width="1920" height="912" alt="image" src="https://github.com/user-attachments/assets/a6d8398e-b10d-4b8f-b44e-631ec960363a" />
+<img width="1920" height="2526" alt="image" src="https://github.com/user-attachments/assets/7da02e8f-a1b2-4ce8-9880-0d905a272249" />
+<img width="1920" height="1256" alt="image" src="https://github.com/user-attachments/assets/ddce031c-1fd0-4e92-a312-900c02efff9c" />
+
+
+
+
+
