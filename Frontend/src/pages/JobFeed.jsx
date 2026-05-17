@@ -4,7 +4,7 @@ import axios from 'axios';
 import { LocationIcon, MoneyIcon, ResumeIcon } from '../components/icons/SvgIcons';
 
 const JOB_TYPES = ['', 'Full-time', 'Part-time', 'Remote', 'Contract', 'Internship'];
-const QUICK_LOCATIONS = ['New York', 'Remote', 'London'];
+const QUICK_LOCATIONS = ['Karachi', 'Lahore', 'Remote'];
 const QUICK_TYPES = ['Full-time', 'Contract', 'Part-time'];
 
 const JobFeed = () => {
@@ -87,7 +87,7 @@ const JobFeed = () => {
               <input
                 type="text"
                 name="location"
-                placeholder="City or remote"
+                placeholder="City or remote within Pakistan"
                 value={filters.location}
                 onChange={handleFilter}
                 className="filter-input"
@@ -186,7 +186,7 @@ const JobFeed = () => {
                   </div>
                   <div className="job-card-meta">
                     <span className="meta-item"><LocationIcon /> {job.location}</span>
-                    <span className="meta-item"><MoneyIcon /> ${job.salary.toLocaleString()}/yr</span>
+                    <span className="meta-item"><MoneyIcon /> Rs {job.salary.toLocaleString()}/yr</span>
                   </div>
                   <p className="job-excerpt">
                     {job.description.length > 120

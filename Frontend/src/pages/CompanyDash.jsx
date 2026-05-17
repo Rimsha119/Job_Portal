@@ -120,7 +120,7 @@ const CompanyDash = () => {
                 <label>Location</label>
                 <input
                   type="text"
-                  placeholder="e.g. New York, NY"
+                  placeholder="e.g. Karachi, Pakistan"
                   value={form.location}
                   onChange={e => setForm({ ...form, location: e.target.value })}
                   required
@@ -129,10 +129,10 @@ const CompanyDash = () => {
             </div>
             <div className="form-row">
               <div className="form-group">
-                <label>Annual Salary ($)</label>
+                <label>Annual Salary (PKR)</label>
                 <input
                   type="number"
-                  placeholder="e.g. 90000"
+                  placeholder="e.g. 900000"
                   value={form.salary}
                   onChange={e => setForm({ ...form, salary: e.target.value })}
                   required
@@ -256,7 +256,7 @@ const CompanyDash = () => {
                 <h3>{job.title}</h3>
                 <div className="dash-job-meta">
                   <span>📍 {job.location}</span>
-                  <span>💰 ${job.salary.toLocaleString()}/yr</span>
+                  <span>💰 Rs {job.salary.toLocaleString()}/yr</span>
                   <span>{job.applicationsCount || 0} applicants</span>
                   <span className={`job-type-badge type-${job.type.replace(/\s+/g, '-').toLowerCase()}`}>
                     {job.type}

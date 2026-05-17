@@ -92,7 +92,7 @@ const JobDetail = () => {
             <span className="meta-icon"><MoneyIcon /></span>
             <div>
               <p className="meta-label">Salary</p>
-              <p className="meta-value">${job.salary.toLocaleString()}/year</p>
+              <p className="meta-value">Rs {job.salary.toLocaleString()}/year</p>
             </div>
           </div>
           <div className="detail-meta-item">
