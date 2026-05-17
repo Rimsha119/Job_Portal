@@ -377,6 +377,9 @@ This project is part of an internship task. Built with ❤️ as a learning exer
 <img width="1920" height="912" alt="image" src="https://github.com/user-attachments/assets/a6d8398e-b10d-4b8f-b44e-631ec960363a" />
 <img width="1920" height="2526" alt="image" src="https://github.com/user-attachments/assets/7da02e8f-a1b2-4ce8-9880-0d905a272249" />
 <img width="1920" height="1256" alt="image" src="https://github.com/user-attachments/assets/ddce031c-1fd0-4e92-a312-900c02efff9c" />
+<img width="1754" height="713" alt="image" src="https://github.com/user-attachments/assets/afb2e21f-0bd4-4c4d-85b4-c86f0e9701ca" />
+<img width="1720" height="834" alt="image" src="https://github.com/user-attachments/assets/2acd95d7-9d25-4791-9ff9-97308e336ca1" />
+<img width="1711" height="480" alt="image" src="https://github.com/user-attachments/assets/0927c9b8-c6ca-4483-900c-147cb2d18f2b" />
 
 
 
